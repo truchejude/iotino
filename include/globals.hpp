@@ -8,6 +8,7 @@ extern String enteredName;
 extern String enteredPassword;
 extern String theJwt;
 extern bool conectedToWifi;
+extern bool login;
 #define SERVEUR_IP "31.34.150.223:1337"
 
 #endif // GLOBALS_HPP
