@@ -13,6 +13,7 @@ void setupAccessPoint(const char* ssid, const char* password);
 String enteredName = "";
 String enteredPassword = "";
 bool conectedToWifi = false;
+String theJwt = "";
 
 void setupAccessPoint(const char* ssid, const char* password) {
   // Configuration du point d'accès Wi-Fi

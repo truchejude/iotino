@@ -2,6 +2,8 @@
 #include <ESPAsyncWebServer.h>
 #include "globals.hpp"
 
+void loginToAPI(const String &identifier, const String &password);
+
 // Déclaration du serveur HTTP
 AsyncWebServer server(80);
 void wifiDeconnection();
@@ -67,6 +69,16 @@ void setupWebServer() {
             button:hover {
               background-color: #d32f2f;
             }
+            .login-form {
+              margin-top: 20px;
+            }
+            input[type="text"], input[type="password"] {
+              width: 100%;
+              padding: 10px;
+              margin: 10px 0;
+              border: 1px solid #ccc;
+              border-radius: 5px;
+            }
           </style>
         </head>
         <body>
@@ -75,6 +87,18 @@ void setupWebServer() {
             <form action="/disconnect" method="POST">
               <button type="submit">Se déconnecter</button>
             </form>
+            <div class="login-form">
+              <h2>Connexion à l'API</h2>
+              <form action="/login" method="POST">
+                <label for="identifier">Identifiant :</label>
+                <input type="text" id="identifier" name="identifier" placeholder="Entrer votre identifiant" required>
+                
+                <label for="password">Mot de passe :</label>
+                <input type="password" id="password" name="password" placeholder="Entrer votre mot de passe" required>
+                
+                <button type="submit">Se connecter</button>
+              </form>
+            </div>
           </div>
         </body>
         </html>
@@ -153,6 +177,18 @@ void setupWebServer() {
 
   // Route pour traiter le formulaire à l'envoi (POST)
   server.on("/submit", HTTP_POST, handleFormSubmit);
+
+  // Route pour la connexion à l'API
+  server.on("/login", HTTP_POST, [](AsyncWebServerRequest *request){
+    String identifier = request->arg("identifier");
+    String password = request->arg("password");
+
+    // Appel de la fonction pour se connecter à l'API
+    loginToAPI(identifier, password);
+
+    // Rediriger vers la page d'accueil après la tentative de connexion
+    request->redirect("/");
+  });
 
   // Route pour déconnexion du Wi-Fi
   server.on("/disconnect", HTTP_POST, [](AsyncWebServerRequest *request){
