@@ -311,106 +311,24 @@ int connectToAPI()
 
 void setup()
 {
-  Serial.begin(115200);
-
-  // Initialiser SPIFFS pour lire les identifiants stockés
-  String ssidvalue = "";
-  String passvalue = "";
-  readFromMemory("SSID", ssidvalue);
-  readFromMemory("wifiPassword", passvalue);
-  if (ssidvalue && passvalue)
-  {
-    if (setup_wifi(ssidvalue, passvalue))
-      Serial.println("conecter au wifi");
-  }
-  // Configurer le point d'accès
-  WiFi.softAP(ap_ssid, ap_password);
-  Serial.println("Access Point 'alibaba' started");
-
-  // Initialiser mDNS pour l'accès avec esp32.local
-  if (!MDNS.begin("esp32"))
-  {
-    Serial.println("Error starting mDNS");
-    return;
-  }
-
-  // Serveur Web - page principale pour entrer les informations Wi-Fi et de connexion API Debut
-  server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
+  server.on("/test", HTTP_GET, [](AsyncWebServerRequest *request)
             {
-        String html = "<!DOCTYPE html><html lang='en'>";
-        html += "<head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>";
-        html += "<title>Connectez l'ESP32 à un réseau Wi-Fi</title>";
-        html += "<style>body{font-family:Arial;text-align:center;padding:50px;}";
-        html += "input{padding:10px;margin:10px;width:80%;max-width:400px;border:1px solid #ccc;border-radius:5px;}";
-        html += "button{padding:10px 20px;background-color:#28a745;color:white;border:none;border-radius:5px;cursor:pointer;}";
-        html += "button:hover{background-color:#218838;}</style></head>";
-        html += "<body><h1>Configurer la connexion Wi-Fi</h1>";
-        html += "<form action='/setWifi' method='POST'>";
-        html += "<label>SSID du réseau Wi-Fi:</label><br>";
-        html += "<input type='text' name='ssid' placeholder='Entrez le SSID' required><br>";
-        html += "<label>Mot de passe:</label><br>";
-        html += "<input type='password' name='password' placeholder='Entrez le mot de passe' required><br>";
-        html += "<button type='submit'>Connecter</button>";
-        html += "</form><br>";
-        html += "<h2>ID Unique de l'ESP32: " + esp32ID + "</h2>";
-        html += "<h1>Connexion API</h1>";
-        html += "<form action='/setApiCredentials' method='POST'>";
-        html += "<label>Identifiant:</label><br>";
-        html += "<input type='text' name='identifier' value='" + identifier + "' placeholder='Entrez l'identifiant' required><br>";
-        html += "<label>Mot de passe:</label><br>";
-        html += "<input type='password' name='password' value='" + password + "' placeholder='Entrez le mot de passe' required><br>";
-        html += "<button type='submit'>Se connecter</button>";
-        html += "</form></body></html>";
+              String html = "<!DOCTYPE html><html lang='en'>";
+              html += "<head><meta charset='UTF-8'><meta name='viewport' content='width=device-width, initial-scale=1.0'>";
+              html += "<title>Test Page</title></head>";
+              html += "<body><h1>test</h1></body></html>";
 
-        request->send(200, "text/html", html); });
-  // fin de la création d'html
+              request->send(200, "text/html", html); // Envoi de la réponse HTML
+            });
 
-  String emailSaved = "";
-  String passSaved = "";
-  readFromMemory("email", emailSaved);
-  readFromMemory("pass", passSaved);
-  identifier = emailSaved;
-  password = passSaved;
-  connectToAPI();
-  // Route pour traiter les informations Wi-Fi
-  server.on("/setWifi", HTTP_POST, [](AsyncWebServerRequest *request)
-            {
-        String ssid = request->arg("ssid");
-        String wifiPassword = request->arg("password");
-
-        // Afficher les informations reçues dans le terminal
-        Serial.println("SSID: " + ssid);
-        Serial.println("Password: " + wifiPassword);
-        //sauvgarde les information
-        saveToMemory("SSID", ssid);
-        saveToMemory("wifiPassword", wifiPassword);
-        Serial.println("le pass:" + wifiPassword + " et le ssid: " + ssid + "ont bien étéstoquer");
-        // Connecter au réseau Wi-Fi
-        setup_wifi(ssid, wifiPassword);
-
-        request->send(200, "text/html", "<h1>Connexion en cours...</h1><p>Retournez sur esp32.local dans quelques instants.</p>"); });
-
-  // Route pour traiter les identifiants API et les stocker
-  server.on("/setApiCredentials", HTTP_POST, [](AsyncWebServerRequest *request)
-            {
-        identifier = request->arg("identifier");
-        password = request->arg("password");
-        // Sauvegarder les identifiants dans SPIFFS
-        saveToMemory("email", identifier);
-        saveToMemory("pass", password);
-        connectToAPI();
-        request->send(200, "text/html", "<h1>Connexion API en cours...</h1>"); });
-
-  // Démarrer le serveur
-  server.begin();
+  server.begin(); // Démarrer le serveur
 }
 
 void loop()
 {
-  // Lecture et envoi périodique de la valeur de la photorésistance
-  delay(1000); // Envoyer toutes les 1 secondes
   if (idDataBas > -1)
   {
+    delay(1000); // Envoyer toutes les 1 secondes
     int lightInfo = analogRead(34);
     sendLightInfo(lightInfo, (String)idDataBas, jwt);
     Serial.println("send");

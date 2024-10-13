@@ -7,7 +7,6 @@
 /.vscode/
 
 # Project configuration files
-platformio.ini
 **/.clang_complete
 **/.gcc-flags.json
 
