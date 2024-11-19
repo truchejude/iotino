@@ -11,6 +11,8 @@ L'objectif du projet Esplighter est de créer un dispositif IoT capable de gére
 - **LED rouge** : connectée au pin GPIO 32
 - **Photorésistance** : connectée au pin GPIO 34
 - Serveur **Mostiko**
+- Serveur **Strapi**
+- Serveur **Page web en react**
 
 ## Fonctionnalités Principales
 
@@ -26,7 +28,7 @@ L'objectif du projet Esplighter est de créer un dispositif IoT capable de gére
 - Les données mesurées par la photorésistance sont envoyées périodiquement au serveur Mostiko.
 - Ces données incluent :
   - La luminosité actuelle
-  - Les états des LED (allumée ou éteinte)
+  - l'email de l'utilisateur
 
 ### Contrôle via Interface Web
 
@@ -40,28 +42,15 @@ L'interface web connectée au serveur Mostiko permet :
 ## Fonctionnement du Système
 
 1. La photorésistance mesure la luminosité ambiante en continu.
-2. Les données sont traitées localement sur l'ESP32 pour déterminer l'état des LED :
+2. Les données sont traitées sur le serveur strapi pour déterminer l'état des LED :
    - Si la luminosité est inférieure au seuil minimum, la LED bleue s'allume.
    - Si la luminosité est supérieure au seuil maximum, la LED rouge s'allume.
-3. Les données de luminosité et l'état des LED sont transmises au serveur Mostiko.
-4. Les utilisateurs peuvent ajuster les seuils de luminosité et le nom du dispositif via l'interface web.
+3. Les données des led sont envoyer sur le chanel moskito qui a pour topic UID de cette ESP
 
 ## API et Configuration
 
 ### Données Transmises au Serveur Mostiko
-
-- **URL** : `http://mostiko.server/api/data`
-- **Méthode** : POST
-- **Format** : JSON
-
-```json
-{
-  "deviceName": "Esplighter-01",
-  "luminosity": 150,
-  "blueLedState": "ON",
-  "redLedState": "OFF"
-}
-```
+conextion au topic puis envoie des information via un json en string
 
 ### Paramètres Configurables
 
@@ -79,15 +68,13 @@ L'interface web connectée au serveur Mostiko permet :
 
 ## Instructions de Déploiement
 
-1. Connecter les LED et la photorésistance aux pins de l'ESP32 comme indiqué dans le schéma.
-2. Configurer l'ESP32 pour qu'il se connecte au réseau Wi-Fi.
+1. Deploiment du serveur Strapi.
+2. Deploiment du serveur React.
 3. Déployer le firmware sur l'ESP32 via PlatformIO ou Arduino IDE.
-4. Configurer les seuils de luminosité et le nom du dispositif via l'interface web.
 
 ## Améliorations Futures
 
 - Ajouter une alerte via notification en cas de luminosité extrême.
-- Permettre le contrôle manuel des LED via l'interface web.
 - Intégrer des capteurs supplémentaires (température, humidité) pour étendre les fonctionnalités.
 
 ---
