@@ -79,4 +79,4 @@ conextion au topic puis envoie des information via un json en string
 
 ---
 
-Cette documentation couvre les aspects techniques et fonctionnels du projet Esplighter pour une gestion optimale de la luminosité et des LED via un dispositif IoT.
+Cette documentation couvre les aspects techniques et fonctionnels du projet Esplighter pour une gestion de la luminosité et des LED via un dispositif IoT.
