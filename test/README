@@ -1,11 +1,95 @@
+# Documentation du Projet IoT Esplighter
 
-This directory is intended for PlatformIO Test Runner and project tests.
+## Introduction
 
-Unit Testing is a software testing method by which individual units of
-source code, sets of one or more MCU program modules together with associated
-control data, usage procedures, and operating procedures, are tested to
-determine whether they are fit for use. Unit testing finds problems early
-in the development cycle.
+L'objectif du projet Esplighter est de créer un dispositif IoT capable de gérer automatiquement des LED en fonction de la luminosité ambiante mesurée par une photorésistance. Le dispositif envoie les informations collectées à un serveur Mostiko et offre des fonctionnalités de contrôle à distance via une interface web.
 
-More information about PlatformIO Unit Testing:
-- https://docs.platformio.org/en/latest/advanced/unit-testing/index.html
+## Matériel Utilisé
+
+- **ESP32**
+- **LED bleue** : connectée au pin GPIO 33
+- **LED rouge** : connectée au pin GPIO 32
+- **Photorésistance** : connectée au pin GPIO 34
+- Serveur **Mostiko**
+
+## Fonctionnalités Principales
+
+### Gestion Automatique des LED
+
+1. **LED bleue (GPIO 33)** :
+   - S'allume lorsque la luminosité ambiante est inférieure à un seuil minimum.
+2. **LED rouge (GPIO 32)** :
+   - S'allume lorsque la luminosité ambiante dépasse un seuil maximum.
+
+### Envoi des Informations au Serveur
+
+- Les données mesurées par la photorésistance sont envoyées périodiquement au serveur Mostiko.
+- Ces données incluent :
+  - La luminosité actuelle
+  - Les états des LED (allumée ou éteinte)
+
+### Contrôle via Interface Web
+
+L'interface web connectée au serveur Mostiko permet :
+
+- De définir des seuils de luminosité :
+  - **Luminosité minimale** (pour déclencher la LED bleue)
+  - **Luminosité maximale** (pour déclencher la LED rouge)
+- De renommer l'Esplighter pour faciliter son identification dans un environnement multi-dispositifs.
+
+## Fonctionnement du Système
+
+1. La photorésistance mesure la luminosité ambiante en continu.
+2. Les données sont traitées localement sur l'ESP32 pour déterminer l'état des LED :
+   - Si la luminosité est inférieure au seuil minimum, la LED bleue s'allume.
+   - Si la luminosité est supérieure au seuil maximum, la LED rouge s'allume.
+3. Les données de luminosité et l'état des LED sont transmises au serveur Mostiko.
+4. Les utilisateurs peuvent ajuster les seuils de luminosité et le nom du dispositif via l'interface web.
+
+## API et Configuration
+
+### Données Transmises au Serveur Mostiko
+
+- **URL** : `http://mostiko.server/api/data`
+- **Méthode** : POST
+- **Format** : JSON
+
+```json
+{
+  "deviceName": "Esplighter-01",
+  "luminosity": 150,
+  "blueLedState": "ON",
+  "redLedState": "OFF"
+}
+```
+
+### Paramètres Configurables
+
+1. **Seuils de luminosité** :
+   - Luminosité minimale
+   - Luminosité maximale
+2. **Nom de l'Esplighter** :
+   - Permet de personnaliser le nom du dispositif pour une meilleure organisation.
+
+## Schéma de Connexion
+
+- **LED bleue** : Pin GPIO 33 (avec résistance)
+- **LED rouge** : Pin GPIO 32 (avec résistance)
+- **Photorésistance** : Pin GPIO 34 (avec un diviseur de tension)
+
+## Instructions de Déploiement
+
+1. Connecter les LED et la photorésistance aux pins de l'ESP32 comme indiqué dans le schéma.
+2. Configurer l'ESP32 pour qu'il se connecte au réseau Wi-Fi.
+3. Déployer le firmware sur l'ESP32 via PlatformIO ou Arduino IDE.
+4. Configurer les seuils de luminosité et le nom du dispositif via l'interface web.
+
+## Améliorations Futures
+
+- Ajouter une alerte via notification en cas de luminosité extrême.
+- Permettre le contrôle manuel des LED via l'interface web.
+- Intégrer des capteurs supplémentaires (température, humidité) pour étendre les fonctionnalités.
+
+---
+
+Cette documentation couvre les aspects techniques et fonctionnels du projet Esplighter pour une gestion optimale de la luminosité et des LED via un dispositif IoT.
