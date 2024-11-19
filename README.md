@@ -22,6 +22,8 @@ L'objectif du projet Esplighter est de créer un dispositif IoT capable de gére
    - S'allume lorsque la luminosité ambiante est inférieure à un seuil minimum.
 2. **LED rouge (GPIO 32)** :
    - S'allume lorsque la luminosité ambiante dépasse un seuil maximum.
+2. **LED rouge (GPIO 32) et LED bleue (GPIO 33)** :
+   - Les deux S'allume en cas d'erreur. (non conecter)
 
 ### Envoi des Informations au Serveur
 
