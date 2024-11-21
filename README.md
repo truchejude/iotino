@@ -52,7 +52,8 @@ L'interface web connectée au serveur Mostiko permet :
 ## API et Configuration
 
 ### Données Transmises au Serveur Mostiko
-conextion au topic puis envoie des information via un json en string
+conextion au topic esplighter puis envoie des information via un json en string:
+{"UID": {"lightinfo": "value", "email": "Email"}
 
 ### Paramètres Configurables
 
